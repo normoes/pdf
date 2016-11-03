@@ -19,7 +19,7 @@ from datetime import datetime as dDatetime
 
 def addPdf_pageByPage(pdfOut, pdfIn, debug = False):
     """
-    Postbank PDFs are encrypted with an empty password
+    some PDFs are encrypted with an empty password
     """
     if pdfIn.isEncrypted:
         print 'encrypted, trying empty password'
@@ -32,14 +32,14 @@ def addPdf_pageByPage(pdfOut, pdfIn, debug = False):
 
 def addPdf_wholePdf(pdfOut, pdfIn, debug = False):
     """
-    Postbank PDFs are encrypted with an empty password
+    some PDFs are encrypted with an empty password
     """
     if pdfIn.isEncrypted:
         print 'encrypted, trying empty password'
         pdfIn.decrypt("") # empty password
     pdfOut.appendPagesFromReader(pdfIn)
 
-def main(path, add_func, debug = False):
+def main(path, merge_func, debug = False):
     if osPath.exists(path):
         output1 = pdfWriter()
         files = osListdir(path)
@@ -50,18 +50,7 @@ def main(path, add_func, debug = False):
                     print
                     print pdf
                 inputpdf = pdfReader(osPath.join(path,pdf), "rb")
-                add_func(output1, inputpdf, debug)
-                """
-                Postbank PDFs are encrypted with an empty password
-                """
-                #if inputpdf.isEncrypted:
-                #    print 'encrypted, trying empty password'
-                #    inputpdf.decrypt("") # empty password
-                #print 'pages:'
-                #for page in range(inputpdf.numPages):
-                #    if debug:
-                #        print page + 1,
-                #    output1.addPage(inputpdf.getPage(page))
+                merge_func(output1, inputpdf, debug)
         newFile= dDatetime.utcnow().strftime('__%Y_%m_%d_%H_%M_%S')+"_new.pdf"
         if debug:
             print
@@ -74,13 +63,12 @@ def main(path, add_func, debug = False):
             print 'closing'
         outputStream.close()
 
-def test_main(add_func):
+def test_main(merge_func):
     print osPath.dirname(osPath.abspath(__file__))
     main(path=osPath.dirname(osPath.abspath(__file__)), add_func = add_func, debug=True)
-    stop = raw_input('press Enter to exit.')
+    raw_input('press Enter to exit.')
 
 if __name__ == '__main__':
-    #add_func = addPdf_pageByPage
-    add_func = addPdf_wholePdf
-    test_main(add_func=add_func)
-    #main(path=osPath.dirname(osPath.abspath(__file__)), add_func=add_func)
+    merge_func = addPdf_wholePdf
+    #test_main(merge_func=merge_func)
+    main(path=osPath.dirname(osPath.abspath(__file__)), merge_func=merge_func)
