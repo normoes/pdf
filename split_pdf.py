@@ -3,20 +3,20 @@
 from PyPDF2 import PdfFileWriter as pdfWriter
 from PyPDF2 import PdfFileReader as pdfReader
 
-#inputpdf = pdfReader(open("/home/norman/SpiderOak Hive/01_programming/11_python/pdf/test/2016-10-01_Mitgliedsbescheinigung.pdf", "rb"))
-inputpdf = pdfReader(open("24056200000027.pdf", "rb"))
+inputpdf = pdfReader(open("2016_10.pdf", "rb"))
 """
-Postbank PDFs are encrypted with an empty password
+some PDFs are encrypted with an empty password
 """
 if inputpdf.isEncrypted:
    print 'encrypted'
    inputpdf.decrypt("") # empty password
-output = pdfWriter()
-outputStream = open("Mitgliedsbescheinigung_aucobo.pdf", "wb")
-totalPages = inputpdf.numPages - 1
-print 'total:', totalPages
+
+
+totalPages = inputpdf.getNumPages() - 1
+print 'total:', totalPages + 1
 for page in range(inputpdf.numPages):
-    if (page >= 2 and page <= 2): # and page <= 0:
-        output.addPage(inputpdf.getPage(page))
-        output.write(outputStream)
-outputStream.close()
+    if (page >= 0 and page <= totalPages): # and page <= 0:
+    	output = pdfWriter()
+    	with open(str(page)+".pdf", "wb") as outStream:
+        	output.addPage(inputpdf.getPage(page))
+        	output.write(outStream)
