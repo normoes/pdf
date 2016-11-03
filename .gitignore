@@ -1,0 +1,10 @@
+*.txt
+*.pyc
+*.spec
+/build
+/dist
+/html2pdf
+/test
+edit_pdf.py
+objectsInPdf.py
+pdfMetaData.py
